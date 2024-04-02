@@ -53,14 +53,9 @@ app.put("/api/v1/posts/:postId", async (req, res) => {
       throw new Error("Post not found");
     }
 
-    const postUpdated = await Post.findByIdAndUpdate(
-      postId,
-      {
-        title: req.body.title,
-        description: req.body.description,
-      },
-      { new: true }
-    );
+    const postUpdated = await Post.findByIdAndUpdate(postId, req.body, {
+      new: true,
+    });
 
     res.status(200).json(postUpdated);
   } catch (error) {
@@ -73,6 +68,16 @@ app.get("/api/v1/posts/:postId", async (req, res) => {
   try {
     const post = await Post.findById(postId);
     res.status(200).json(post);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.delete("/api/v1/posts/:postId", async (req, res) => {
+  const postId = req.params.postId;
+  try {
+    const deletePost = await Post.findByIdAndDelete(postId);
+    res.status(200).json(deletePost);
   } catch (error) {
     console.log(error);
   }
