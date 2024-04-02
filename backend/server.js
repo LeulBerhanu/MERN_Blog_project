@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const Post = require("./models/Post/Post");
 const connectDB = require("./utils/connectDB");
 
@@ -14,6 +15,14 @@ const PORT = 5000;
 // Middlewares
 app.use(express.json());
 
+//cors
+const corsOptions = {
+  origin: ["http://localhost:5173"],
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 app.post("/api/v1/posts/create", async (req, res) => {
   try {
     const postData = req.body;
@@ -24,7 +33,6 @@ app.post("/api/v1/posts/create", async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
-  console.log("hi");
 });
 
 app.listen(PORT, console.log(`server is up and running on port ${PORT}`));
