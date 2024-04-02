@@ -6,8 +6,6 @@ const connectDB = require("./utils/connectDB");
 // Connect DB
 connectDB();
 
-console.log("hi");
-
 const app = express();
 
 const PORT = 5000;
@@ -23,15 +21,23 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.post("/api/v1/posts/create", async (req, res) => {
+app.post("/api/v1/posts/create", async (req, res, next) => {
   try {
-    const postData = req.body;
-    const postCreated = await Post.create(postData);
+    const { title, description } = req.body;
+
+    // find post by title
+    const postFound = await Post.findOne({ title });
+    if (postFound) {
+      throw new Error("Post already exist");
+    }
+
+    const postCreated = await Post.create({ title, description });
     res
       .status(200)
       .json({ message: "Post created successfully!", data: postCreated });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    // res.status(500).json(error.message);
+    next(error);
   }
 });
 
@@ -81,6 +87,14 @@ app.delete("/api/v1/posts/:postId", async (req, res) => {
   } catch (error) {
     console.log(error);
   }
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  // prepare the error message
+  const message = err.message;
+  const stack = err.stack;
+  res.status(500).send({ message, stack });
 });
 
 app.listen(PORT, console.log(`server is up and running on port ${PORT}`));
