@@ -35,4 +35,13 @@ app.post("/api/v1/posts/create", async (req, res) => {
   }
 });
 
+app.get("/api/v1/posts", async (req, res) => {
+  try {
+    const posts = await Post.find();
+    res.status(200).json(posts);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
 app.listen(PORT, console.log(`server is up and running on port ${PORT}`));
