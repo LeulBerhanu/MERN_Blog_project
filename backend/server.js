@@ -1,4 +1,5 @@
 const express = require("express");
+const asyncHandler = require("express-async-handler");
 const cors = require("cors");
 const Post = require("./models/Post/Post");
 const connectDB = require("./utils/connectDB");
@@ -21,37 +22,35 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.post("/api/v1/posts/create", async (req, res, next) => {
-  try {
+app.post(
+  "/api/v1/posts/create",
+  asyncHandler(async (req, res) => {
     const { title, description } = req.body;
 
     // find post by title
     const postFound = await Post.findOne({ title });
     if (postFound) {
-      throw new Error("Post already exist");
+      throw new Error("Post already exists");
     }
 
     const postCreated = await Post.create({ title, description });
     res
       .status(200)
       .json({ message: "Post created successfully!", data: postCreated });
-  } catch (error) {
-    // res.status(500).json(error.message);
-    next(error);
-  }
-});
+  })
+);
 
-app.get("/api/v1/posts", async (req, res) => {
-  try {
+app.get(
+  "/api/v1/posts",
+  asyncHandler(async (req, res) => {
     const posts = await Post.find();
     res.status(200).json(posts);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
+  })
+);
 
-app.put("/api/v1/posts/:postId", async (req, res) => {
-  try {
+app.put(
+  "/api/v1/posts/:postId",
+  asyncHandler(async (req, res) => {
     const postId = req.params.postId;
 
     const postFound = await Post.findById(postId);
@@ -64,29 +63,30 @@ app.put("/api/v1/posts/:postId", async (req, res) => {
     });
 
     res.status(200).json(postUpdated);
-  } catch (error) {
-    console.log(error);
-  }
-});
+  })
+);
 
-app.get("/api/v1/posts/:postId", async (req, res) => {
-  const postId = req.params.postId;
-  try {
+app.get(
+  "/api/v1/posts/:postId",
+  asyncHandler(async (req, res) => {
+    const postId = req.params.postId;
     const post = await Post.findById(postId);
     res.status(200).json(post);
-  } catch (error) {
-    console.log(error);
-  }
-});
+  })
+);
 
-app.delete("/api/v1/posts/:postId", async (req, res) => {
-  const postId = req.params.postId;
-  try {
+app.delete(
+  "/api/v1/posts/:postId",
+  asyncHandler(async (req, res) => {
+    const postId = req.params.postId;
     const deletePost = await Post.findByIdAndDelete(postId);
     res.status(200).json(deletePost);
-  } catch (error) {
-    console.log(error);
-  }
+  })
+);
+
+// Not found handler
+app.use((req, res, next) => {
+  res.status(404).json({ message: "Route not found on our server" });
 });
 
 // Error handling middleware
