@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import {
-  getSinglePostAPI,
+  getPostAPI,
   updatePostAPI,
 } from "../../src/APIServices/posts/postsAPI";
 
@@ -13,7 +13,7 @@ const UpdatePost = () => {
 
   const { data } = useQuery({
     queryKey: ["post-detail"],
-    queryFn: () => getSinglePostAPI(postId),
+    queryFn: () => getPostAPI(postId),
   });
 
   //   console.log("queryData", data);

@@ -10,12 +10,12 @@ export const createPostAPI = async (postData) => {
   return response.data;
 };
 
-export const getPostAPI = async () => {
+export const fetchAllPosts = async () => {
   const response = await axios.get(BASE_URL);
   return response.data;
 };
 
-export const getSinglePostAPI = async (postId) => {
+export const getPostAPI = async (postId) => {
   const response = await axios.get(BASE_URL + `/${postId}`);
   return response.data;
 };
