@@ -3,9 +3,10 @@ const Post = require("../../models/Post/Post");
 
 const postController = {
   createPostController: asyncHandler(async (req, res) => {
+    console.log(req.file);
     const { description } = req.body;
 
-    const postCreated = await Post.create({ description });
+    const postCreated = await Post.create({ description, image: req.file });
     res
       .status(200)
       .json({ message: "Post created successfully!", data: postCreated });
