@@ -55,11 +55,11 @@ const PostsList = () => {
                   <div className="relative" style={{ height: 240 }}>
                     <div className="absolute top-0 left-0 z-10"></div>
                     <div className="absolute bottom-0 right-0 z-10"></div>
-                    {/* <img
+                    <img
                       className="absolute inset-0 w-full h-full object-cover rounded-2xl"
                       src="https://cdn.pixabay.com/photo/2023/12/19/15/51/flowers-8457960_1280.jpg"
                       alt
-                    /> */}
+                    />
                   </div>
                   <div className="pt-6 pb-3 px-4">
                     <div
