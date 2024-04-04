@@ -28,13 +28,12 @@ const PostsList = () => {
     <div>
       {isLoading && <p>Loading...</p>}
       {isSuccess && <p>Posts fetched!</p>}
-      {error && <p>{error.message}</p>}
+      {error && <p>{error.message}</p>}s
       {data?.map((post, idx) => (
         <div key={idx}>
           {
             <div>
-              <h2>{post.title}</h2>
-              <p>{post.description}</p>
+              <div dangerouslySetInnerHTML={{ __html: post.description }} />
               <Link to={"/posts/" + post?._id}>
                 <button>Edit</button>
               </Link>

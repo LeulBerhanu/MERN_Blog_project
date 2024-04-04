@@ -3,15 +3,9 @@ const Post = require("../../models/Post/Post");
 
 const postController = {
   createPostController: asyncHandler(async (req, res) => {
-    const { title, description } = req.body;
+    const { description } = req.body;
 
-    // find post by title
-    const postFound = await Post.findOne({ title });
-    if (postFound) {
-      throw new Error("Post already exists");
-    }
-
-    const postCreated = await Post.create({ title, description });
+    const postCreated = await Post.create({ description });
     res
       .status(200)
       .json({ message: "Post created successfully!", data: postCreated });

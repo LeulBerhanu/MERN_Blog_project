@@ -25,7 +25,7 @@ const UpdatePost = () => {
 
   const formik = useFormik({
     initialValues: {
-      title: data?.title || "",
+      // title: data?.title || "",
       description: data?.description || "",
     },
     enableReinitialize: true,
