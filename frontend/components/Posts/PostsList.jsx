@@ -7,9 +7,11 @@ import {
   fetchAllPosts,
 } from "../../src/APIServices/posts/postsAPI";
 import { Link } from "react-router-dom";
+import NoDataFound from "../Alert/NoDataFound";
+import AlertMessage from "../Alert/AlertMessage";
 
 const PostsList = () => {
-  const { isSuccess, isLoading, data, error, refetch } = useQuery({
+  const { isError, isSuccess, isLoading, data, error, refetch } = useQuery({
     queryKey: ["lists-post"],
     queryFn: fetchAllPosts,
   });
@@ -20,14 +22,18 @@ const PostsList = () => {
     mutationFn: deletePostAPI,
   });
 
-  const handleDelete = async (postId) => {
-    deletePostMutation
-      .mutateAsync(postId)
-      .then(() => refetch())
-      .catch((error) => console.error(error));
-  };
+  // const handleDelete = async (postId) => {
+  //   deletePostMutation
+  //     .mutateAsync(postId)
+  //     .then(() => refetch())
+  //     .catch((error) => console.error(error));
+  // };
 
-  console.log(data);
+  // Alerts
+  if (isLoading)
+    return <AlertMessage type="loading" message="Loading please wait" />;
+  if (isError) return <AlertMessage type="error" message={error.message} />;
+  if (data?.length <= 0) return <NoDataFound text="No Post Found" />;
 
   return (
     <section className="overflow-hidden">

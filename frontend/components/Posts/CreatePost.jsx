@@ -6,6 +6,7 @@ import "react-quill/dist/quill.snow.css";
 import { FaTimesCircle } from "react-icons/fa";
 import { useMutation } from "@tanstack/react-query";
 import { createPostAPI } from "../../src/APIServices/posts/postsAPI";
+import AlertMessage from "../Alert/AlertMessage";
 
 const CreatePost = () => {
   const [description, setDescription] = useState("");
@@ -66,9 +67,10 @@ const CreatePost = () => {
   // success state
   const isSuccess = postMutation.isSuccess;
   // Error
-  const error = postMutation.error;
   const errorMsg = postMutation?.error?.response?.data?.message;
   // console.log(errorMsg);
+
+  if (isError) return <AlertMessage type="error" message={errorMsg} />;
 
   return (
     <div className="flex items-center justify-center">
@@ -77,10 +79,15 @@ const CreatePost = () => {
           Add New Post
         </h2>
         {/* show alert */}
-
+        {isLoading && (
+          <AlertMessage type="loading" message="Loading please wait" />
+        )}
+        {isSuccess && (
+          <AlertMessage type="success" message="Post created successfully" />
+        )}
         <form onSubmit={formik.handleSubmit} className="space-y-6">
           {/* Description Input - Using ReactQuill for rich text editing */}
-          <div>
+          <div className="mb-16">
             <label
               htmlFor="description"
               className="block text-sm font-medium text-gray-700"
@@ -93,6 +100,7 @@ const CreatePost = () => {
                 setDescription(value);
                 formik.setFieldValue("description", value);
               }}
+              className="h-40"
             />
 
             {/* Display error msg */}
