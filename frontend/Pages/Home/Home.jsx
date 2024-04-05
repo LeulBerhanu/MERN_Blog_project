@@ -22,7 +22,7 @@ const Home = () => {
           </p>
           <div className="flex justify-center lg:pb-56">
             <Link
-              to="/register"
+              to="/signup"
               className="w-full sm:w-auto h-16 inline-flex items-center justify-center text-center py-4 px-6 rounded-full bg-orange-600 border border-orange-700 shadow font-bold font-heading text-white hover:bg-orange-800 focus:ring focus:ring-blue-200 transition duration-200"
             >
               Get Started

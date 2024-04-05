@@ -9,7 +9,7 @@ const userController = {
   register: asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
 
-    const userFound = await User.findOne({ username, email });
+    const userFound = await User.findOne({ email });
     if (userFound) {
       throw new Error("User already exists!");
     }
@@ -44,14 +44,12 @@ const userController = {
         maxAge: 24 * 60 * 60 * 1000, //1 day
       });
 
-      res
-        .status(200)
-        .json({
-          message: "Login success!",
-          username: user?.username,
-          email: user?.email,
-          _id: user?._id,
-        });
+      res.status(200).json({
+        message: "Login success!",
+        username: user?.username,
+        email: user?.email,
+        _id: user?._id,
+      });
     })(req, res, next);
   }),
 };
