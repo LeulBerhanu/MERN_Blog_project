@@ -1,5 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
 const User = require("../../models/User/User");
 
 const userController = {
@@ -24,6 +26,33 @@ const userController = {
     res
       .status(201)
       .json({ message: "User registered successfully", userRegistered });
+  }),
+
+  // Login
+  login: asyncHandler(async (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) return next(err);
+
+      if (!user) return res.status(401).json({ message: info.message });
+
+      // generate token
+      const token = jwt.sign({ id: user?._id }, process.env.JWT_SECRET);
+      console.log(token);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: false,
+        maxAge: 24 * 60 * 60 * 1000, //1 day
+      });
+
+      res
+        .status(200)
+        .json({
+          message: "Login success!",
+          username: user?.username,
+          email: user?.email,
+          _id: user?._id,
+        });
+    })(req, res, next);
   }),
 };
 

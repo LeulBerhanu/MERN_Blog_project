@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const passport = require("./utils/passport-config");
 const connectDB = require("./utils/connectDB");
 const postRouter = require("./router/post/postsRouter");
 const userRouter = require("./router/user/userRouter");
@@ -13,6 +14,9 @@ const PORT = 5000;
 
 // Middlewares
 app.use(express.json());
+
+// passport middleware
+app.use(passport.initialize());
 
 //cors
 const corsOptions = {
