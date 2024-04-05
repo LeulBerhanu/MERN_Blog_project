@@ -1,9 +1,8 @@
 const express = require("express");
-const asyncHandler = require("express-async-handler");
 const cors = require("cors");
-const Post = require("./models/Post/Post");
 const connectDB = require("./utils/connectDB");
 const postRouter = require("./router/post/postsRouter");
+const userRouter = require("./router/user/userRouter");
 
 // Connect DB
 connectDB();
@@ -24,6 +23,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/api/v1/posts", postRouter);
+app.use("/api/v1/user", userRouter);
 
 // Not found handler
 app.use((req, res, next) => {
