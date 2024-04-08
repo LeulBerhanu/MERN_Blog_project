@@ -2,7 +2,6 @@ import { BASE_URL } from "../../utils/baseEndpoint";
 import axios from "axios";
 
 export const registerAPI = async (userData) => {
-  console.log("userDAta", userData);
   const response = await axios.post(
     BASE_URL + "/user/register",
     {
@@ -15,6 +14,20 @@ export const registerAPI = async (userData) => {
     }
   );
 
-  console.log("resgisterAPI response", response);
+  return response.data;
+};
+
+export const loginAPI = async (userData) => {
+  const response = await axios.post(
+    BASE_URL + "/user/login",
+    {
+      email: userData?.email,
+      password: userData?.password,
+    },
+    {
+      withCredentials: true,
+    }
+  );
+
   return response.data;
 };

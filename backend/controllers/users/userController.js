@@ -32,15 +32,16 @@ const userController = {
   login: asyncHandler(async (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
+      console.log("info", info);
 
       if (!user) return res.status(401).json({ message: info.message });
 
       // generate token
       const token = jwt.sign({ id: user?._id }, process.env.JWT_SECRET);
-      console.log(token);
       res.cookie("token", token, {
         httpOnly: true,
         secure: false,
+        sameSite: "strict",
         maxAge: 24 * 60 * 60 * 1000, //1 day
       });
 

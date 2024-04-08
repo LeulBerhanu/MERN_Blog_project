@@ -1,46 +1,99 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
+import { useMutation } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router-dom";
+import { loginAPI } from "../../src/APIServices/user/userAPI";
+import AlertMessage from "../../components/Alert/AlertMessage";
 
 const Login = () => {
-  return (
-    <div className="flex flex-wrap">
-      <div className="w-full  p-4">
-        <div className="flex flex-col justify-center max-w-md mx-auto h-full py-12">
-          <form>
-            <h1 className="text-3xl font-bold font-heading mb-4">Login</h1>
-            {/* display error */}
+  const navigate = useNavigate();
 
+  const userMutation = useMutation({
+    mutationKey: ["user-login"],
+    mutationFn: loginAPI,
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Enter valid email")
+        .required("Email is required"),
+      password: Yup.string().required("Password is required"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+      userMutation.mutate(values);
+    },
+  });
+  // , {
+  //   onSuccess: () => navigate("/login", { replace: true }),
+  // }
+
+  return (
+    <div className="flex flex-wrap pb-24">
+      <div className="w-full  p-4">
+        <div className="flex flex-col justify-center py-24 max-w-md mx-auto h-full">
+          <form onSubmit={formik.handleSubmit}>
             <Link
               to="/signup"
               className="inline-block text-gray-500 hover: transition duration-200 mb-8"
             >
-              <span>New to Masync Blog? </span>
+              <span>Don't have an account? </span>
               <span />
-              <span className="font-bold font-heading">Create new account</span>
+              <span className="font-bold font-heading">Sign up</span>
             </Link>
-            {/* Email */}
-            <label className="block text-sm font-medium mb-2">Email</label>
+            {/* show alert */}
+            {userMutation.isPending && (
+              <AlertMessage type="loading" message="Loading please wait..." />
+            )}
+            {userMutation.isSuccess && (
+              <AlertMessage
+                type="success"
+                message="User logged in successfully  "
+              />
+            )}
+            {userMutation.isError && (
+              <AlertMessage
+                type="error"
+                message={userMutation?.error?.response?.data?.message}
+              />
+            )}
+
+            <label
+              className="block text-sm font-medium mb-2"
+              htmlFor="textInput1"
+            >
+              Email
+            </label>
             <input
-              type="email"
-              id="email"
-              // {...formik.getFieldProps("email")}
-              className="w-full rounded-full p-4 outline-none border border-gray-100 shadow placeholder-gray-500 focus:ring focus:ring-orange-200 transition duration-200 mb-1"
+              className="w-full rounded-full p-4 outline-none border border-gray-100 shadow placeholder-gray-500 focus:ring focus:ring-orange-200 transition duration-200 mb-4"
+              type="text"
               placeholder="example@email.com"
+              {...formik.getFieldProps("email")}
             />
-            {/* {formik.touched.email && formik.errors.email && (
-              <div className="text-red-500 mb-4 mt-1">
-                {formik.errors.email}
-              </div>
-            )} */}
-            {/* Pssword */}
-            <label className="block text-sm font-medium mb-2">Password</label>
-            <div className="flex items-center gap-1 w-full rounded-full p-4 border border-gray-100 shadow mb-3">
+            {/* error */}
+            {formik.touched.email && formik.errors.email && (
+              <div className="text-red-500 mt-1">{formik.errors.email}</div>
+            )}
+            <label
+              className="block text-sm font-medium mb-2"
+              htmlFor="textInput2"
+            >
+              Password
+            </label>
+            <div className="flex items-center gap-1 w-full rounded-full p-4 border border-gray-100 shadow mb-8">
               <input
-                type="password"
-                id="password"
-                // {...formik.getFieldProps("password")}
                 className="outline-none flex-1 placeholder-gray-500 "
+                id="textInput2"
+                type="password"
                 placeholder="Enter password"
+                {...formik.getFieldProps("password")}
               />
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -59,17 +112,10 @@ const Login = () => {
                 />
               </svg>
             </div>
-            {/* {formik.touched.password && formik.errors.password && (
+            {/* error */}
+            {formik.touched.password && formik.errors.password && (
               <div className="text-red-500 mt-1">{formik.errors.password}</div>
-            )} */}
-            <div className="mb-8 flex justify-end">
-              <Link
-                to={"/forgot-password"}
-                className="inline-block text-orange-500 hover:text-orange-600 transition duration-200 text-sm font-semibold"
-              >
-                Forgot Password?
-              </Link>
-            </div>
+            )}
             <button
               className="h-14 inline-flex items-center justify-center py-4 px-6 text-white font-bold font-heading rounded-full bg-orange-500 w-full text-center border border-orange-600 shadow hover:bg-orange-600 focus:ring focus:ring-orange-200 transition duration-200 mb-8"
               type="submit"
@@ -77,7 +123,6 @@ const Login = () => {
               Login
             </button>
             {/* login with google */}
-
             <a
               // href="http://localhost:9000/api/v1/users/auth/google"
               className="h-14 inline-flex items-center justify-center gap-2 py-4 px-6 rounded-full bg-white w-full text-center border border-gray-100 shadow hover:bg-gray-50 focus:ring focus:ring-orange-200 transition duration-200"
