@@ -1,3 +1,4 @@
+require("dotenv").config();
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User/User");
@@ -30,8 +31,6 @@ passport.use(
   )
 );
 
-// GOOGLE OAUTH
-
 // JWT-Options
 const options = {
   jwtFromRequest: ExtractJWT.fromExtractors([
@@ -60,6 +59,49 @@ passport.use(
       return done(error, false);
     }
   })
+);
+
+// GOOGLE OAUTH
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:5000/api/v1/user/auth/google/callback",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      try {
+        let user = await User.findOne({ googleId: profile.id });
+
+        const {
+          id,
+          displayName,
+          name,
+          _json: { picture },
+        } = profile;
+
+        // check if email exists
+        let email = "";
+        if (Array.isArray(profile?.emails) && profile?.emails?.length > 0) {
+          email = profile.emails[0].value;
+        }
+
+        // check if user not found
+        if (!user) {
+          user = await User.create({
+            username: displayName,
+            googleId: id,
+            profilePicture: picture,
+            authMethod: "google",
+            email,
+          });
+        }
+        done(null, user);
+      } catch (error) {
+        done(error, null);
+      }
+    }
+  )
 );
 
 module.exports = passport;
