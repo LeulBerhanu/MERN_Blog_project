@@ -1,6 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const storage = require("../../utils/fileupload");
+const isAuthenticated = require("../../middleware/isAuthenticated");
 const {
   createPostController,
   getAllPostsController,
@@ -14,14 +15,19 @@ const upload = multer({ storage });
 
 const postRouter = express.Router();
 
-postRouter.post("/create", upload.single("image"), createPostController);
+postRouter.post(
+  "/create",
+  isAuthenticated,
+  upload.single("image"),
+  createPostController
+);
 
 postRouter.get("/", getAllPostsController);
 
-postRouter.put("/:postId", updatePostController);
+postRouter.put("/:postId", isAuthenticated, updatePostController);
 
 postRouter.get("/:postId", getPostController);
 
-postRouter.delete("/:postId", deletePostController);
+postRouter.delete("/:postId", isAuthenticated, deletePostController);
 
 module.exports = postRouter;

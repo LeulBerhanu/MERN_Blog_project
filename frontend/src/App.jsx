@@ -13,6 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { isAuthenticated } from "./redux/slices/authSlices";
 import { checkAuthStatusAPI } from "./APIServices/user/userAPI";
+import AuthRoute from "../components/AuthRoute/AuthRoute";
 
 function App() {
   const { isError, isLoading, data, error, isSuccess, refetch } = useQuery({
@@ -39,7 +40,14 @@ function App() {
         <Route path="/posts/:postId" element={<PostDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={
+            <AuthRoute>
+              <Profile />
+            </AuthRoute>
+          }
+        />
         {/* <Route path="/posts/:postId" element={<UpdatePost />} /> */}
       </Routes>
     </BrowserRouter>
