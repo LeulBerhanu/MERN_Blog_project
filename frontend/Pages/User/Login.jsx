@@ -27,8 +27,11 @@ const Login = () => {
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: (values) => {
-      console.log(values);
-      userMutation.mutate(values);
+      userMutation.mutate(values, {
+        onSuccess: () => {
+          navigate("/profile");
+        },
+      });
     },
   });
   // , {

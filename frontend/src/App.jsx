@@ -7,6 +7,7 @@ import PublicNavbar from "../components/Navbar/PublicNavbar";
 import Home from "../Pages/Home/Home";
 import PostDetails from "../components/Posts/PostDetails";
 import Register from "../Pages/User/Register";
+import Profile from "../Pages/User/Profile";
 function App() {
   return (
     <BrowserRouter>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/posts/:postId" element={<PostDetails />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
+        <Route path="/profile" element={<Profile />} />
         {/* <Route path="/posts/:postId" element={<UpdatePost />} /> */}
       </Routes>
     </BrowserRouter>

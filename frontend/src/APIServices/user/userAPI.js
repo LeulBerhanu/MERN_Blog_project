@@ -25,9 +25,17 @@ export const loginAPI = async (userData) => {
       password: userData?.password,
     },
     {
-      withCredentials: true,
+      withCredentials: true, //takes the token from the cookie
     }
   );
+
+  return response.data;
+};
+
+export const checkAuthStatusAPI = async () => {
+  const response = await axios.get(BASE_URL + "/user/checkauthenticated", {
+    withCredentials: true,
+  });
 
   return response.data;
 };
