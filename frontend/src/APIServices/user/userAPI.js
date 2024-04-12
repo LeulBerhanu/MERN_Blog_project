@@ -39,3 +39,15 @@ export const checkAuthStatusAPI = async () => {
 
   return response.data;
 };
+
+export const logoutAPI = async () => {
+  const response = await axios.post(
+    BASE_URL + "/user/logout",
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+
+  return response.status;
+};

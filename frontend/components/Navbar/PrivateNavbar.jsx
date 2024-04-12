@@ -1,17 +1,42 @@
 import { Fragment, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { PlusIcon } from "@heroicons/react/20/solid";
 import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { logoutAPI } from "../../src/APIServices/user/userAPI";
+import { useDispatch } from "react-redux";
 
 import { MdOutlineDashboard } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
+import { logout } from "../../src/redux/slices/authSlices";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function PrivateNavbar() {
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+  const logoutMutation = useMutation({
+    mutationKey: ["user-logout"],
+    mutationFn: logoutAPI,
+  });
+
+  // logout handler
+  const logoutHandler = () => {
+    logoutMutation.mutate(
+      {},
+      {
+        onSuccess: () => {
+          dispatch(logout());
+          navigate("/login");
+        },
+      }
+    );
+  };
+
   return (
     <Disclosure as="nav" className="bg-white ">
       {({ open }) => (
@@ -56,7 +81,7 @@ export default function PrivateNavbar() {
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <button
-                    // onClick={logoutHandler}
+                    onClick={logoutHandler}
                     type="button"
                     className="relative m-2 inline-flex items-center gap-x-1.5 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-600"
                   >
