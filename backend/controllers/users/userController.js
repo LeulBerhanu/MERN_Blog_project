@@ -116,6 +116,11 @@ const userController = {
       return res.status(401).json({ isAuthenticated: false, error });
     }
   }),
+
+  logout: asyncHandler(async (req, res) => {
+    res.cookie("token", "", { maxAge: 1 });
+    res.status(200).json({ message: "Logout successfull" });
+  }),
 };
 
 module.exports = userController;
