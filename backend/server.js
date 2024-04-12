@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const passport = require("./utils/passport-config");
 const connectDB = require("./utils/connectDB");
@@ -14,6 +15,7 @@ const PORT = 5000;
 
 // Middlewares
 app.use(express.json());
+app.use(cookieParser());
 
 // passport middleware
 app.use(passport.initialize());

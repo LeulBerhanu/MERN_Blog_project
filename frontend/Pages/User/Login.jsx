@@ -34,6 +34,7 @@ const Login = () => {
   // , {
   //   onSuccess: () => navigate("/login", { replace: true }),
   // }
+  console.log(formik.errors);
 
   return (
     <div className="flex flex-wrap pb-24">
