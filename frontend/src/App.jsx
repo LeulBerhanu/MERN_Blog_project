@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { isAuthenticated } from "./redux/slices/authSlices";
 import { checkAuthStatusAPI } from "./APIServices/user/userAPI";
 import AuthRoute from "../components/AuthRoute/AuthRoute";
+import UserDashbaord from "../Pages/User/UserDashboard";
 
 function App() {
   const { isError, isLoading, data, error, isSuccess, refetch } = useQuery({
@@ -35,14 +36,16 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route
-          path="/create-post"
-          element={
-            <AuthRoute>
-              <CreatePost />
-            </AuthRoute>
-          }
-        />
+        <Route path="/dashboard" element={<UserDashbaord />}>
+          <Route
+            path="create-post"
+            element={
+              <AuthRoute>
+                <CreatePost />
+              </AuthRoute>
+            }
+          />
+        </Route>
         <Route path="/posts" element={<PostsList />} />
         <Route path="/posts/:postId" element={<PostDetails />} />
         <Route path="/login" element={<Login />} />
