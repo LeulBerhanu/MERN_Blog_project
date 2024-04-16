@@ -9,7 +9,6 @@ const AuthRoute = ({ children }) => {
     queryKey: ["user-auth"],
     queryFn: checkAuthStatusAPI,
   });
-  console.log("data", data);
   //   const navigate = useNavigate();
 
   if (isLoading) {

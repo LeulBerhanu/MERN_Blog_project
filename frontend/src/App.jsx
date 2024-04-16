@@ -35,7 +35,14 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/create-post" element={<CreatePost />} />
+        <Route
+          path="/create-post"
+          element={
+            <AuthRoute>
+              <CreatePost />
+            </AuthRoute>
+          }
+        />
         <Route path="/posts" element={<PostsList />} />
         <Route path="/posts/:postId" element={<PostDetails />} />
         <Route path="/login" element={<Login />} />

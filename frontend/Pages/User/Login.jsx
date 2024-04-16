@@ -17,8 +17,8 @@ const Login = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: "leul@g.c",
+      password: "1234",
     },
     validationSchema: Yup.object({
       email: Yup.string()
@@ -37,7 +37,6 @@ const Login = () => {
   // , {
   //   onSuccess: () => navigate("/login", { replace: true }),
   // }
-  console.log(formik.errors);
 
   return (
     <div className="flex flex-wrap pb-24">
