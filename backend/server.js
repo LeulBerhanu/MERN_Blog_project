@@ -5,6 +5,7 @@ const passport = require("./utils/passport-config");
 const connectDB = require("./utils/connectDB");
 const postRouter = require("./router/post/postsRouter");
 const userRouter = require("./router/user/userRouter");
+const categoryRouter = require("./router/category/categoryRouter");
 
 // Connect DB
 connectDB();
@@ -30,6 +31,7 @@ app.use(cors(corsOptions));
 
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/category", categoryRouter);
 
 // Not found handler
 app.use((req, res, next) => {
