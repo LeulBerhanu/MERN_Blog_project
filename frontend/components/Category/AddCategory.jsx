@@ -23,15 +23,6 @@ const AddCategory = () => {
     },
   });
 
-  // loading state
-  const isLoading = categoryMutation.isPending;
-  // Error state
-  const isError = categoryMutation.isError;
-  // success state
-  const isSuccess = categoryMutation.isSuccess;
-  // Error
-  const errorMsg = categoryMutation?.error?.response?.data?.message;
-
   return (
     <div className="flex flex-wrap">
       <div className="w-full  p-4">
@@ -41,16 +32,21 @@ const AddCategory = () => {
               Add Category
             </h1>
             {/* show alert */}
-            {isLoading && (
+            {categoryMutation.isPending && (
               <AlertMessage type="loading" message="Loading please wait" />
             )}
-            {isSuccess && (
+            {categoryMutation.isSuccess && (
               <AlertMessage
                 type="success"
                 message="Category created successfully"
               />
             )}
-            {isError && <AlertMessage type="error" message={errorMsg} />}
+            {categoryMutation.isError && (
+              <AlertMessage
+                type="error"
+                message={categoryMutation?.error?.response?.data?.message}
+              />
+            )}
 
             {/* Category Name */}
 
