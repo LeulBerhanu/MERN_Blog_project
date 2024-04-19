@@ -19,8 +19,9 @@ const postController = {
       category,
     });
 
+    console.log("postCreated", postCreated);
     // push the post into category
-    categoryFound.posts.push(categoryFound?._id);
+    categoryFound.posts.push(postCreated?._id);
     // resave the category
     await categoryFound.save();
 
@@ -30,8 +31,34 @@ const postController = {
   }),
 
   getAllPostsController: asyncHandler(async (req, res) => {
-    const posts = await Post.find().populate("category");
-    res.status(200).json(posts);
+    const { category, title, page, limit } = req.query;
+
+    // basic filter
+    let filter = {};
+    if (category) {
+      filter.category = category;
+    }
+    if (title) {
+      filter.description = { $regex: title, $options: "i" }; //case insensitive
+    }
+
+    console.log(filter);
+
+    const posts = await Post.find(filter)
+      .populate("category")
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    // total posts
+    const totalPosts = await Post.countDocuments(filter);
+
+    res.status(200).json({
+      posts,
+      currentPage: page,
+      perPage: limit,
+      totalPages: Math.ceil(totalPosts / limit),
+    });
   }),
 
   updatePostController: asyncHandler(async (req, res) => {

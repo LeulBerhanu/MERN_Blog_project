@@ -9,13 +9,20 @@ import {
 import { Link } from "react-router-dom";
 import NoDataFound from "../Alert/NoDataFound";
 import AlertMessage from "../Alert/AlertMessage";
+import PostCategory from "../Category/PostCategory";
+import { fetchCategoriesAPI } from "../../src/APIServices/category/categoryAPI";
 
 const PostsList = () => {
+  // Fetch catagories
+  const { data: categoriesData } = useQuery({
+    queryKey: ["fetch-categories"],
+    queryFn: fetchCategoriesAPI,
+  });
+
   const { isError, isSuccess, isLoading, data, error, refetch } = useQuery({
     queryKey: ["lists-post"],
     queryFn: fetchAllPosts,
   });
-  console.log("Data", data);
 
   const deletePostMutation = useMutation({
     mutationKey: ["delete-post"],
@@ -47,16 +54,17 @@ const PostsList = () => {
         <h2 className="text-4xl font-bold font-heading mb-10">
           Latest articles
         </h2>
+
         {/* Post category */}
-        {/* <PostCategory
-        categories={categoriesData}
-        onCategorySelect={handleCategoryFilter}
-      /> */}
+        <PostCategory
+          categories={categoriesData?.categories}
+          // onCategorySelect={handleCategoryFilter}
+        />
 
         <div className="flex flex-wrap mb-32 -mx-4">
           {/* Posts */}
 
-          {data?.map((post) => (
+          {data?.posts?.map((post) => (
             <div key={post._id} className="w-full md:w-1/2 lg:w-1/3 p-4">
               <Link to={`/posts/${post._id}`}>
                 <div className="bg-white border border-gray-100 hover:border-orange-500 transition duration-200 rounded-2xl h-full p-3">
