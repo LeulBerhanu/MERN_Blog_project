@@ -31,7 +31,7 @@ const postController = {
   }),
 
   getAllPostsController: asyncHandler(async (req, res) => {
-    const { category, title, page, limit } = req.query;
+    const { category, title, page = 1, limit = 10 } = req.query;
 
     // basic filter
     let filter = {};

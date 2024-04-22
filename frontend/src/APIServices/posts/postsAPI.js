@@ -9,8 +9,11 @@ export const createPostAPI = async (postData) => {
   return response.data;
 };
 
-export const fetchAllPosts = async () => {
-  const response = await axios.get(BASE_URL);
+export const fetchAllPosts = async (filters) => {
+  console.log("FILTERS", filters);
+  const response = await axios.get(BASE_URL, {
+    params: filters,
+  });
   return response.data;
 };
 

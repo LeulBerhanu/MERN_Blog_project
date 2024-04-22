@@ -13,15 +13,32 @@ import PostCategory from "../Category/PostCategory";
 import { fetchCategoriesAPI } from "../../src/APIServices/category/categoryAPI";
 
 const PostsList = () => {
+  // filtering state
+  const [filters, setFilters] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+
+  const { isError, isSuccess, isLoading, data, error, refetch } = useQuery({
+    queryKey: ["lists-post"],
+    queryFn: () =>
+      fetchAllPosts({ ...filters, title: searchTerm, page, limit: 10 }),
+  });
+
+  // category filter handler
+  const handleCategoryFilter = (categoryId) => {
+    setFilters({ ...filters, category: categoryId });
+    setPage(1);
+    refetch();
+  };
+  // handle search handler
+  // handle submit search term handler
+  // handle page change handler
+  // handle clear filters handler
+
   // Fetch catagories
   const { data: categoriesData } = useQuery({
     queryKey: ["fetch-categories"],
     queryFn: fetchCategoriesAPI,
-  });
-
-  const { isError, isSuccess, isLoading, data, error, refetch } = useQuery({
-    queryKey: ["lists-post"],
-    queryFn: fetchAllPosts,
   });
 
   const deletePostMutation = useMutation({
@@ -58,7 +75,7 @@ const PostsList = () => {
         {/* Post category */}
         <PostCategory
           categories={categoriesData?.categories}
-          // onCategorySelect={handleCategoryFilter}
+          onCategorySelect={handleCategoryFilter}
         />
 
         <div className="flex flex-wrap mb-32 -mx-4">
