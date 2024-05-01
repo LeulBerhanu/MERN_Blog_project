@@ -6,6 +6,7 @@ const connectDB = require("./utils/connectDB");
 const postRouter = require("./router/post/postsRouter");
 const userRouter = require("./router/user/userRouter");
 const categoryRouter = require("./router/category/categoryRouter");
+const planRouter = require("./router/plan/planRouter");
 
 // Connect DB
 connectDB();
@@ -32,6 +33,7 @@ app.use(cors(corsOptions));
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/category", categoryRouter);
+app.use("/api/v1/plans", planRouter);
 
 // Not found handler
 app.use((req, res, next) => {

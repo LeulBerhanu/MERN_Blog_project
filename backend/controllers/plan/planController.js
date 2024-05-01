@@ -17,9 +17,7 @@ const planController = {
     }
 
     const planCreated = await Plan.create({
-      planName,
-      features,
-      price,
+      ...req.body,
       user: req.currentUser,
     });
 
@@ -43,6 +41,9 @@ const planController = {
   getPlan: asyncHandler(async (req, res) => {
     const planId = req.params.planId;
     const plan = await Plan.findById(planId);
+
+    if (!plan) return res.status(404).json({ message: "Plan not found!" });
+
     res.status(200).json({
       status: "success",
       message: "Plan fetched successfully",
