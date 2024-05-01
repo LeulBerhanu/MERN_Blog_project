@@ -40,6 +40,14 @@ export const checkAuthStatusAPI = async () => {
   return response.data;
 };
 
+export const userProfileAPI = async () => {
+  const response = await axios.get(BASE_URL + "/user/profile", {
+    withCredentials: true,
+  });
+
+  return response.data;
+};
+
 export const logoutAPI = async () => {
   const response = await axios.post(
     BASE_URL + "/user/logout",
