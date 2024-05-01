@@ -11,6 +11,8 @@ import NoDataFound from "../Alert/NoDataFound";
 import AlertMessage from "../Alert/AlertMessage";
 import PostCategory from "../Category/PostCategory";
 import { fetchCategoriesAPI } from "../../src/APIServices/category/categoryAPI";
+import { FaSearch } from "react-icons/fa";
+import { MdClear } from "react-icons/md";
 
 const PostsList = () => {
   // filtering state
@@ -18,22 +20,47 @@ const PostsList = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
 
-  const { isError, isSuccess, isLoading, data, error, refetch } = useQuery({
-    queryKey: ["lists-post"],
-    queryFn: () =>
-      fetchAllPosts({ ...filters, title: searchTerm, page, limit: 10 }),
-  });
+  const { isError, isSuccess, isLoading, data, error, refetch, isFetching } =
+    useQuery({
+      queryKey: ["lists-post", { ...filters, page }],
+      queryFn: () =>
+        fetchAllPosts({ ...filters, title: searchTerm, page, limit: 10 }),
+    });
 
   // category filter handler
   const handleCategoryFilter = (categoryId) => {
+    console.log("handling  Category Filter", categoryId);
     setFilters({ ...filters, category: categoryId });
     setPage(1);
     refetch();
   };
+
   // handle search handler
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
   // handle submit search term handler
+  const handleSearchSubmit = (e) => {
+    console.log("Handling submit");
+    e.preventDefault();
+    setFilters({ ...filters, title: searchTerm });
+    setPage(1);
+    refetch();
+  };
+
   // handle page change handler
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    refetch();
+  };
+
   // handle clear filters handler
+  const clearFilters = () => {
+    setFilters({});
+    setSearchTerm(" ");
+    setPage(1);
+    refetch();
+  };
 
   // Fetch catagories
   const { data: categoriesData } = useQuery({
@@ -54,10 +81,8 @@ const PostsList = () => {
   // };
 
   // Alerts
-  if (isLoading)
-    return <AlertMessage type="loading" message="Loading please wait" />;
+
   if (isError) return <AlertMessage type="error" message={error.message} />;
-  if (data?.length <= 0) return <NoDataFound text="No Post Found" />;
 
   return (
     <section className="overflow-hidden">
@@ -65,21 +90,52 @@ const PostsList = () => {
         <h1 className="text-4xl lg:text-6xl font-bold font-heading mb-6 mt-16">
           Blog
         </h1>
-
         {/* featured post */}
         {/* <FeaturedPost post={featuredPost} /> */}
         <h2 className="text-4xl font-bold font-heading mb-10">
           Latest articles
         </h2>
-
+        {/* Searching Feature */}
+        <form
+          onSubmit={handleSearchSubmit}
+          className="flex flex-col md:flex-row items-center gap-2 mb-4"
+        >
+          <div className="flex-grow flex items-center border border-gray-300 rounded-lg overflow-hidden">
+            <input
+              type="text"
+              placeholder="Search posts..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="flex-grow p-2 text-sm focus:outline-none"
+            />
+            <button
+              type="submit"
+              className="p-2 text-white bg-orange-500 hover:bg-blue-600 rounded-r-lg"
+            >
+              <FaSearch className="h-5 w-5" />
+            </button>
+          </div>
+          <button
+            onClick={clearFilters}
+            className="p-2 text-sm text-orange-500 border border-blue-500 rounded-lg hover:bg-blue-100 flex items-center gap-1"
+          >
+            <MdClear className="h-4 w-4" />
+            Clear Filters
+          </button>
+        </form>
         {/* Post category */}
         <PostCategory
           categories={categoriesData?.categories}
           onCategorySelect={handleCategoryFilter}
+          onClearFilters={clearFilters}
         />
+        {isLoading && (
+          <AlertMessage type="loading" message="Loading please wait" />
+        )}
 
         <div className="flex flex-wrap mb-32 -mx-4">
           {/* Posts */}
+          {data?.posts?.length <= 0 && <NoDataFound text="No Post Found" />}
 
           {data?.posts?.map((post) => (
             <div key={post._id} className="w-full md:w-1/2 lg:w-1/3 p-4">
@@ -127,29 +183,29 @@ const PostsList = () => {
       </div>
 
       {/* Pagination */}
-      {/* <div className="flex justify-center items-center my-8 space-x-4">
-      {isPreviousButtonVisible && (
-        <button
-          onClick={() => handlePageChange(page - 1)}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-        >
-          Previous
-        </button>
-      )}
+      <div className="flex justify-center items-center my-8 space-x-4">
+        {page > 1 && (
+          <button
+            onClick={() => handlePageChange(page - 1)}
+            className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+          >
+            Previous
+          </button>
+        )}
 
-      <span className="text-sm font-semibold">
-        Page {page} of {postsData?.totalPages}
-      </span>
+        <span className="text-sm font-semibold">
+          Page {page} of {data?.totalPages}
+        </span>
 
-      {isNextButtonVisible && (
-        <button
-          onClick={() => handlePageChange(page + 1)}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
-        >
-          Next
-        </button>
-      )}
-    </div> */}
+        {page < data?.totalPages && (
+          <button
+            onClick={() => handlePageChange(page + 1)}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-50"
+          >
+            Next
+          </button>
+        )}
+      </div>
     </section>
   );
 };
