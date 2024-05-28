@@ -19,6 +19,9 @@ import AccountSummaryDashboard from "../Pages/User/AccountSummary";
 import AddCategory from "../components/Category/AddCategory";
 import CreatePlan from "../components/Plans/CreatePlan";
 import Pricing from "../components/Plans/Pricing";
+import CheckoutForm from "../components/Plans/CheckoutForm";
+import PaymentSuccess from "../components/Plans/PaymentSuccess";
+import PayingFreePlan from "../components/Plans/PayingFreePlan";
 
 function App() {
   const { isError, isLoading, data, error, isSuccess, refetch } = useQuery({
@@ -86,6 +89,24 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Register />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/checkout/:planId" element={<CheckoutForm />} />
+
+        <Route
+          path="/success"
+          element={
+            <AuthRoute>
+              <PaymentSuccess />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/free-subscription"
+          element={
+            <AuthRoute>
+              <PayingFreePlan />
+            </AuthRoute>
+          }
+        />
         <Route
           path="/profile"
           element={

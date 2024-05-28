@@ -9,6 +9,7 @@ const {
   getPostController,
   deletePostController,
 } = require("../../controllers/post/postController");
+const checkUserPlan = require("../../middleware/checkUserPlan");
 
 // multer instance
 const upload = multer({ storage });
@@ -18,6 +19,7 @@ const postRouter = express.Router();
 postRouter.post(
   "/create",
   isAuthenticated,
+  checkUserPlan,
   upload.single("image"),
   createPostController
 );

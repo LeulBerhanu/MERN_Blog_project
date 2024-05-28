@@ -7,6 +7,7 @@ const postRouter = require("./router/post/postsRouter");
 const userRouter = require("./router/user/userRouter");
 const categoryRouter = require("./router/category/categoryRouter");
 const planRouter = require("./router/plan/planRouter");
+const stripePaymentRouter = require("./router/stripePayment/stripePaymentRouter");
 
 // Connect DB
 connectDB();
@@ -34,6 +35,7 @@ app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/category", categoryRouter);
 app.use("/api/v1/plans", planRouter);
+app.use("/api/v1/stripe", stripePaymentRouter);
 
 // Not found handler
 app.use((req, res, next) => {
